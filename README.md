@@ -77,4 +77,4 @@ MIT License — see [LICENSE](LICENSE)
 
 Issues and PRs are welcome! See [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) for common problems and how to help.
 
-**Let’s build a better bionic arm—together!**
+**build affordable bionic arm**
