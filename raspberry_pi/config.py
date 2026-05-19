@@ -34,7 +34,7 @@ DEBUG = False
 """
 ================== GPIO Reference ==================
 - All servo PWM outputs connected to PCA9685 channels 0-4
-- PCA9685 module is controlled over I2C (default ESP32 pins: SDA GPIO21 / SCL GPIO22)
+- PCA9685 module is controlled over I2C (Raspberry Pi BCM GPIO2/GPIO3)
 - No servo PWM directly from GPIO pins—always use PWM driver!
 - For more, see hardware/WIRING.md.
 """

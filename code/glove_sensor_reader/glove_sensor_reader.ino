@@ -46,7 +46,7 @@ int flexToAngle(int flexVal, int inMin, int inMax, bool reverse = false) {
 void setServoAngle(uint8_t channel, int angle) {
   angle = constrain(angle, minAngle, maxAngle);
   int pulseUs = map(angle, minAngle, maxAngle, servoMinPulseUs, servoMaxPulseUs);
-  int pwmTicks = (pulseUs * 4096) / 20000;  // 50Hz -> 20,000us period
+  int pwmTicks = static_cast<int>((pulseUs * 4096.0f) / 20000.0f + 0.5f);  // 50Hz -> 20,000us period
   pca9685.setPWM(channel, 0, pwmTicks);
 }
 

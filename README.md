@@ -62,6 +62,7 @@ Dumm-E-robotic-arm/
 4. Install ESP32 board support in Arduino IDE (`esp32 by Espressif Systems`) or use PlatformIO (`platform = espressif32`).
 5. Flash ESP32 DevKit v1 with [`code/glove_sensor_reader/glove_sensor_reader.ino`](code/glove_sensor_reader/glove_sensor_reader.ino)
 6. Wire ESP32 ↔ PCA9685 and flex sensors as documented in [`hardware/WIRING.md`](hardware/WIRING.md)
+7. *(Optional legacy path)* If you still want Raspberry Pi serial-to-servo control, use [`raspberry_pi/`](raspberry_pi) with ESP32 serial output.
 
 ---
 

@@ -13,10 +13,11 @@ Welcome! This guide walks you step-by-step through setting up your own bionic, g
 5. [ESP32 Flex Sensor Calibration](#esp32-flex-sensor-calibration)
 6. [ESP32 Setup](#esp32-setup)
 7. [Firmware Upload](#firmware-upload)
-8. [Servo & Power Safety](#servo--power-safety)
-9. [Initial Power-on Checklist](#initial-power-on-checklist)
-10. [Testing & Debugging](#testing--debugging)
-11. [Upgrades & Extensions](#upgrades--extensions)
+8. [Optional Raspberry Pi Bridge Setup](#optional-raspberry-pi-bridge-setup)
+9. [Servo & Power Safety](#servo--power-safety)
+10. [Initial Power-on Checklist](#initial-power-on-checklist)
+11. [Testing & Debugging](#testing--debugging)
+12. [Upgrades & Extensions](#upgrades--extensions)
 
 ---
 
@@ -82,6 +83,17 @@ See [`hardware/PARTS_LIST.md`](../hardware/PARTS_LIST.md).
 2. Ensure I2C pins in firmware match your wiring (default SDA=GPIO21, SCL=GPIO22).
 3. Compile and upload the sketch to ESP32 DevKit v1.
 4. Optional (PlatformIO): use `platform = espressif32`, `board = esp32dev`.
+
+---
+
+## Optional Raspberry Pi Bridge Setup
+
+If you choose to keep Raspberry Pi in the loop (ESP32 sends flex values over USB serial, Pi drives PCA9685):
+
+1. Install Raspberry Pi OS and update: `sudo apt update && sudo apt upgrade`
+2. Enable I2C: `sudo raspi-config` → Interfacing Options → I2C → Enable
+3. In `raspberry_pi/`, install dependencies: `pip install -r requirements.txt`
+4. Run `python3 main.py` and set `SERIAL_PORT` in `raspberry_pi/config.py` to your ESP32 serial device.
 
 ---
 
