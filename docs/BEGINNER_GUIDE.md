@@ -93,7 +93,7 @@ If you choose to keep Raspberry Pi in the loop (ESP32 sends flex values over USB
 1. Install Raspberry Pi OS and update: `sudo apt update && sudo apt upgrade`
 2. Enable I2C: `sudo raspi-config` → Interfacing Options → I2C → Enable
 3. In `raspberry_pi/`, install dependencies: `pip install -r requirements.txt`
-4. Run `python3 main.py` and set `SERIAL_PORT` in `raspberry_pi/config.py` to your ESP32 serial device.
+4. Set `SERIAL_PORT` in `raspberry_pi/config.py` to your ESP32 serial device, then run `python3 main.py`.
 
 ---
 
