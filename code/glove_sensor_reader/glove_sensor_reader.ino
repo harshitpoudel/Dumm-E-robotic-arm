@@ -23,7 +23,7 @@ bool servoReverse[NUM_SERVOS] = {false, false, false, false, false};
 
 int flexVals[NUM_SENSORS];
 
-// Calibration values (ESP32 ADC defaults to 0-4095)
+// Calibration values (ESP32 ADC is 0-4095; tune these placeholders for your glove readings)
 const int flexMin[NUM_SENSORS] = {1200, 1200, 1200, 1200, 1200};
 const int flexMax[NUM_SENSORS] = {3000, 3000, 3000, 3000, 3000};
 
@@ -31,6 +31,8 @@ const int minAngle = 0;
 const int maxAngle = 180;
 const int servoMinPulseUs = 500;
 const int servoMaxPulseUs = 2500;
+const int pcaResolution = 4096;  // 12-bit
+const int pwmPeriodUs = 20000;   // 50Hz
 
 Adafruit_PWMServoDriver pca9685 = Adafruit_PWMServoDriver(PCA9685_ADDR);
 
@@ -46,7 +48,7 @@ int flexToAngle(int flexVal, int inMin, int inMax, bool reverse = false) {
 void setServoAngle(uint8_t channel, int angle) {
   angle = constrain(angle, minAngle, maxAngle);
   int pulseUs = map(angle, minAngle, maxAngle, servoMinPulseUs, servoMaxPulseUs);
-  int pwmTicks = static_cast<int>((pulseUs * 4096.0f) / 20000.0f + 0.5f);  // 50Hz -> 20,000us period
+  int pwmTicks = static_cast<int>((pulseUs * pcaResolution * 1.0f) / pwmPeriodUs + 0.5f);
   pca9685.setPWM(channel, 0, pwmTicks);
 }
 
