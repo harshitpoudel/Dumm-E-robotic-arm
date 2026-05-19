@@ -23,9 +23,9 @@ bool servoReverse[NUM_SERVOS] = {false, false, false, false, false};
 
 int flexVals[NUM_SENSORS];
 
-// Calibration values (ESP32 ADC is 0-4095; tune these placeholders for your glove readings)
-const int flexMin[NUM_SENSORS] = {1200, 1200, 1200, 1200, 1200};
-const int flexMax[NUM_SENSORS] = {3000, 3000, 3000, 3000, 3000};
+// Calibration values (ESP32 ADC is 0-4095; update these after glove calibration)
+const int flexMin[NUM_SENSORS] = {0, 0, 0, 0, 0};
+const int flexMax[NUM_SENSORS] = {4095, 4095, 4095, 4095, 4095};
 
 const int minAngle = 0;
 const int maxAngle = 180;
@@ -48,7 +48,7 @@ int flexToAngle(int flexVal, int inMin, int inMax, bool reverse = false) {
 void setServoAngle(uint8_t channel, int angle) {
   angle = constrain(angle, minAngle, maxAngle);
   int pulseUs = map(angle, minAngle, maxAngle, servoMinPulseUs, servoMaxPulseUs);
-  int pwmTicks = static_cast<int>((pulseUs * pcaResolution * 1.0) / pwmPeriodUs + 0.5);
+  int pwmTicks = static_cast<int>((pulseUs * pcaResolution * 1.0) / pwmPeriodUs + 0.5);  // +0.5 for nearest-int rounding
   pca9685.setPWM(channel, 0, pwmTicks);
 }
 

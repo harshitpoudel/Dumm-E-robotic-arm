@@ -79,7 +79,7 @@ LiPo (+7.4V)
 
 - **Always** have a fuse on your LiPo lines!
 - All modules get a *common ground* (connect all GNDs together!).
-- Double check voltage: servos burn at >7V, ESP32 dies above 3.3V logic and 5V USB limits.
+- Double check voltage: servos burn at >7V, ESP32 GPIO is 3.3V-only, and ESP32 USB/VIN input should stay at 5V.
 - Keep signal wires short; use new Dupont cables and solder for reliability.
 - Only power on ESP32 and servos once double-checked.
 
