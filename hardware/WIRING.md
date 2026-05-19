@@ -45,7 +45,7 @@ LiPo (+7.4V)
 
 *PCA9685 "V+" must be powered by external 5V–6V servo supply (UBEC), not from ESP32 3V3 pin.*
 
-**Logic-level note:** Most PCA9685 boards accept 3.3V I2C logic directly. If your specific board requires 5V-only I2C thresholds, add an I2C level shifter.
+**Logic-level note:** Most PCA9685 boards accept 3.3V I2C logic directly. Check your board datasheet/silkscreen; if it specifies 5V-only I2C thresholds (or you see unstable I2C detection), add an I2C level shifter.
 
 ---
 

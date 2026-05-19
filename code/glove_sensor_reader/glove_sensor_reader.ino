@@ -7,6 +7,7 @@
 
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
+#include <math.h>
 
 #define NUM_SENSORS 5
 #define NUM_SERVOS 5
@@ -23,7 +24,7 @@ bool servoReverse[NUM_SERVOS] = {false, false, false, false, false};
 
 int flexVals[NUM_SENSORS];
 
-// Calibration values (ESP32 ADC is 0-4095; update these after glove calibration)
+// Calibration values (full-range uncalibrated defaults; replace after glove calibration)
 const int flexMin[NUM_SENSORS] = {0, 0, 0, 0, 0};
 const int flexMax[NUM_SENSORS] = {4095, 4095, 4095, 4095, 4095};
 
@@ -48,7 +49,7 @@ int flexToAngle(int flexVal, int inMin, int inMax, bool reverse = false) {
 void setServoAngle(uint8_t channel, int angle) {
   angle = constrain(angle, minAngle, maxAngle);
   int pulseUs = map(angle, minAngle, maxAngle, servoMinPulseUs, servoMaxPulseUs);
-  int pwmTicks = static_cast<int>((pulseUs * pcaResolution * 1.0) / pwmPeriodUs + 0.5);  // +0.5 for nearest-int rounding
+  int pwmTicks = lround((pulseUs * pcaResolution * 1.0) / pwmPeriodUs);
   pca9685.setPWM(channel, 0, pwmTicks);
 }
 
