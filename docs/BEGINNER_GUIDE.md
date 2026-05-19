@@ -10,21 +10,22 @@ Welcome! This guide walks you step-by-step through setting up your own bionic, g
 2. [Required Parts](#required-parts)
 3. [Assembly Overview](#assembly-overview)
 4. [Glove Preparation](#glove-preparation)
-5. [Arduino Flex Sensor Calibration](#arduino-flex-sensor-calibration)
-6. [Arduino Setup](#arduino-setup)
-7. [Raspberry Pi Preparation](#raspberry-pi-preparation)
-8. [Servo & Power Safety](#servo--power-safety)
-9. [Initial Power-on Checklist](#initial-power-on-checklist)
-10. [Testing & Debugging](#testing--debugging)
-11. [Upgrades & Extensions](#upgrades--extensions)
+5. [ESP32 Flex Sensor Calibration](#esp32-flex-sensor-calibration)
+6. [ESP32 Setup](#esp32-setup)
+7. [Firmware Upload](#firmware-upload)
+8. [Optional Raspberry Pi Bridge Setup](#optional-raspberry-pi-bridge-setup)
+9. [Servo & Power Safety](#servo--power-safety)
+10. [Initial Power-on Checklist](#initial-power-on-checklist)
+11. [Testing & Debugging](#testing--debugging)
+12. [Upgrades & Extensions](#upgrades--extensions)
 
 ---
 
 ## Safety Warnings
 
-- **Never power the servos from your Pi’s 5V rail!**  
+- **Never power the servos from your ESP32 board 5V/USB rail!**  
   Use a separate UBEC/BEC at 6V and a fuse.
-- **Always check for common ground** between Pi, Arduino, and servos.
+- **Always check for common ground** between ESP32, PCA9685, and servos.
 - **Remove jewelry and tie hair/clothes** before testing.
 - **Servos can pinch or crush fingers**—keep hands clear!
 - **Hotglue and soldering irons are HOT—Use with care.**
@@ -40,11 +41,11 @@ See [`hardware/PARTS_LIST.md`](../hardware/PARTS_LIST.md).
 ## Assembly Overview
 
 1. **3D print** the required arm/hand parts.
-2. **Wire** flex sensors to Arduino as voltage dividers.
+2. **Wire** flex sensors to ESP32 as voltage dividers.
 3. **Mount** servos and string tendons.
 4. **Connect** servos to PCA9685 and power.
-5. **Wire** Raspberry Pi I2C to PCA9685 (see [`hardware/WIRING.md`](../hardware/WIRING.md)).
-6. **Connect** Arduino to Pi over USB.
+5. **Wire** ESP32 I2C to PCA9685 (see [`hardware/WIRING.md`](../hardware/WIRING.md)).
+6. **Connect** ESP32 USB for programming and serial debug.
 
 ---
 
@@ -56,30 +57,43 @@ See [`hardware/PARTS_LIST.md`](../hardware/PARTS_LIST.md).
 
 ---
 
-## Arduino Flex Sensor Calibration
+## ESP32 Flex Sensor Calibration
 
-1. Upload [`glove_sensor_reader.ino`](../code/glove_sensor_reader/glove_sensor_reader.ino) to your Arduino.
-2. Open Arduino Serial Monitor at 115200 baud.
+1. Upload [`glove_sensor_reader.ino`](../code/glove_sensor_reader/glove_sensor_reader.ino) to your ESP32 DevKit v1.
+2. Open Serial Monitor at 115200 baud.
 3. Note the analog values for each finger when straight (**flexMin**) and fully bent (**flexMax**).
 4. Update the arrays in the code for precise mapping.
-5. Re-upload to your Arduino.
+5. Re-upload to your ESP32.
 
 ---
 
-## Arduino Setup
+## ESP32 Setup
 
-- Use any Arduino model with ≥5 analog inputs.
-- Connect each sensor’s output (middle wire) to each analog pin A0–A4.
+- Install Arduino IDE board package: **esp32 by Espressif Systems**.
+- Select board: **ESP32 Dev Module** (ESP32 DevKit v1 compatible).
+- Connect each sensor output (middle wire) to ESP32 ADC pins (default: GPIO32, 33, 34, 35, 39).
 - Use 10kΩ resistors to ground to form voltage dividers.
 
 ---
 
-## Raspberry Pi Preparation
+## Firmware Upload
 
-1. Install Raspbian OS, update with `sudo apt update && sudo apt upgrade`.
-2. Enable I2C with `sudo raspi-config` (Interfacing → I2C → Enable).
-3. `cd raspberry_pi/`
-4. Install dependencies with `pip install -r requirements.txt`
+1. Install required Arduino libraries:
+   - `Adafruit PWM Servo Driver Library`
+2. Ensure I2C pins in firmware match your wiring (default SDA=GPIO21, SCL=GPIO22).
+3. Compile and upload the sketch to ESP32 DevKit v1.
+4. Optional (PlatformIO): use `platform = espressif32`, `board = esp32dev`.
+
+---
+
+## Optional Raspberry Pi Bridge Setup
+
+If you choose to keep Raspberry Pi in the loop (ESP32 sends flex values over USB serial, Pi drives PCA9685):
+
+1. Install Raspberry Pi OS and update: `sudo apt update && sudo apt upgrade`
+2. Enable I2C: `sudo raspi-config` → Interfacing Options → I2C → Enable
+3. In `raspberry_pi/`, install dependencies: `pip install -r requirements.txt`
+4. Set `SERIAL_PORT` in `raspberry_pi/config.py` to your ESP32 serial device, then run `python3 main.py`.
 
 ---
 
@@ -87,7 +101,7 @@ See [`hardware/PARTS_LIST.md`](../hardware/PARTS_LIST.md).
 
 - Use a fuse and UBEC on your LiPo power!
 - Connect servo external power “V+” and ground to PCA9685 and all servos.
-- Never power servos from Pi’s 5V pin.
+- Never power servos from ESP32 board 5V/USB pin.
 
 ---
 
@@ -97,17 +111,16 @@ See [`hardware/PARTS_LIST.md`](../hardware/PARTS_LIST.md).
 ✓ Glove sensor readings present in Serial Monitor  
 ✓ All grounds connected in common  
 ✓ Servo power off for first software test  
-✓ All code uploaded correctly
+✓ ESP32 firmware uploaded correctly
 
 ---
 
 ## Testing & Debugging
 
-1. Run `main.py` on Raspberry Pi:  
-   `python3 main.py`
-2. Move your gloved fingers—corresponding servos should move the robot.
-3. If servos move wrong direction, set `SERVO_REVERSE[]` in `config.py`.
-4. If movement is limited, recalibrate flex sensors and servos.
+1. Open Serial Monitor (115200 baud) and confirm live flex values.
+2. Move your gloved fingers—corresponding servos should move via PCA9685 channels.
+3. If servos move in wrong direction, set `servoReverse[]` in the ESP32 sketch.
+4. If movement is limited, recalibrate `flexMin[]` and `flexMax[]`.
 
 ---
 

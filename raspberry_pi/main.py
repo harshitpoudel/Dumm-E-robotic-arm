@@ -1,7 +1,7 @@
 """
 Dumm-E Robotic Arm Controller (Raspberry Pi Side)
 -------------------------------------------------
-Reads flex sensor values via serial (USB from Arduino), maps to 5 servos (MG996R) via PCA9685 PWM.
+Reads flex sensor values via serial (USB from ESP32 DevKit v1), maps to 5 servos (MG996R) via PCA9685 PWM.
 Beginner-friendly, commented, robust.
 """
 

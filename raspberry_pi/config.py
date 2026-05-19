@@ -20,12 +20,12 @@ SERVO_MAX_PULSE = 2500
 # Servo reversal (False=normal, True=reversed; use if servo moves opposite direction)
 SERVO_REVERSE = [False, False, False, False, False]
 
-# Flex sensor calibration (update per your glove/Arduino calibration)
+# Flex sensor calibration (update per your glove/ESP32 calibration)
 FLEX_MIN = [0, 0, 0, 0, 0]      # Sensor value when finger is straight
 FLEX_MAX = [1023, 1023, 1023, 1023, 1023]  # Sensor value when fully bent
 
 # Serial communication
-SERIAL_PORT = "/dev/ttyACM0"    # Use 'ls /dev/ttyACM*' or 'ls /dev/ttyUSB*' to find your Arduino
+SERIAL_PORT = "/dev/ttyACM0"    # Use 'ls /dev/ttyACM*' or 'ls /dev/ttyUSB*' to find your ESP32
 SERIAL_BAUDRATE = 115200
 
 # Debug output for troubleshooting (set True for verbose)
@@ -34,7 +34,7 @@ DEBUG = False
 """
 ================== GPIO Reference ==================
 - All servo PWM outputs connected to PCA9685 channels 0-4
-- PCA9685 module is controlled over I2C (SCL/SDA on BCM GPIO2/3)
+- PCA9685 module is controlled over I2C (Raspberry Pi BCM GPIO2/GPIO3)
 - No servo PWM directly from GPIO pins—always use PWM driver!
 - For more, see hardware/WIRING.md.
 """

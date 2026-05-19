@@ -9,12 +9,11 @@ Always turn OFF power supplies before wiring. Use a UBEC to bring LiPo voltage t
 
 | Module                     | Connects To      | Signal Details                       |
 |----------------------------|------------------|--------------------------------------|
-| Flex Sensors (Glove)       | Arduino Analog   | A0–A4, via 10kΩ resistors            |
-| Arduino (Nano/Uno)         | RPi 4 (USB)      | USB Serial connection                |
-| Raspberry Pi 4 GPIO        | PCA9685 Module   | I2C: SDA (GPIO2), SCL (GPIO3)        |
+| Flex Sensors (Glove)       | ESP32 ADC pins   | GPIO32, 33, 34, 35, 39 via 10kΩ dividers |
+| ESP32 DevKit v1            | PCA9685 Module   | I2C: SDA (GPIO21), SCL (GPIO22)      |
 | PCA9685 PWM Board          | Servos           | Channels 0–4; +6V, GND per servo     |
-| Power (LiPo via UBEC)      | PCA9685, Servos  | 6V 5A output, common ground w/ RPi   |
-| MPU-6050 IMU (Optional)    | RPi 4 I2C        | Shared SDA, SCL (address selectable) |
+| Power (LiPo via UBEC)      | PCA9685, Servos  | 6V 5A output, common ground w/ ESP32 |
+| MPU-6050 IMU (Optional)    | ESP32 I2C        | Shared SDA, SCL (address selectable) |
 
 ---
 
@@ -28,49 +27,51 @@ LiPo (+7.4V)
 [UBEC] ——> +6V → PCA9685 V+ (power rail)
    |                 \
    |                  +––> MG996R Servos (red wires)
-  GND ————————+———————> PCA9685 GND, Servo Brown wires, RPi GND
+  GND ————————+———————> PCA9685 GND, Servo Brown wires, ESP32 GND
              |
-         RPi GND
+         ESP32 GND
 ```
 
 ---
 
-### **PCA9685/RPi I2C Wiring:**
+### **PCA9685 / ESP32 DevKit v1 I2C Wiring (Default):**
 
-| PCA9685 pin | RPi GPIO (BCM) | Pi Pin # |
-|-------------|----------------|----------|
-| SCL         | GPIO3 (SCL)    | 5        |
-| SDA         | GPIO2 (SDA)    | 3        |
-| VCC         | 3.3V           | 1        |
-| GND         | GND            | 6        |
+| PCA9685 pin | ESP32 pin | Notes |
+|-------------|-----------|-------|
+| SCL         | GPIO22    | Default SCL, configurable in code |
+| SDA         | GPIO21    | Default SDA, configurable in code |
+| VCC         | 3V3       | Logic supply |
+| GND         | GND       | Must share common ground |
 
-*PCA9685 "V+" must be powered by 6V (UBEC), not Pi 5V pin!*
+*PCA9685 "V+" must be powered by external 5V–6V servo supply (UBEC), not from ESP32 3V3 pin.*
+
+**Logic-level note:** Most PCA9685 boards accept 3.3V I2C logic directly. Check your board datasheet/silkscreen; if it specifies 5V-only I2C thresholds (or you see unstable I2C detection), add an I2C level shifter.
 
 ---
 
-## **Arduino/Flex Sensor:**
+## **ESP32/Flex Sensor:**
 
 - Each flex sensor forms a voltage divider with a 10kΩ resistor.
-- Connect middle “sensor wire” to analog input (A0–A4).
-- Both sensor ends: ground & +5V from Arduino.
+- Connect middle “sensor wire” to ESP32 ADC1 inputs (GPIO32/33/34/35/39).
+- Feed divider from 3.3V and GND on ESP32.
 
 ---
 
 ### **Flex Sensor Example Schematic:**
 
 ```
-+5V ----+
+3.3V ----+
         |
    [Flex Sensor]
         |
-     Analog In (A0)
+    Analog In (ESP32 ADC pin)
         |
    [10kΩ resistor]
         |
       GND
 ```
 
-[Flexes] → [Arduino analog pins] — USB — [RPi] — I2C — [PWM Driver] → [Servos]
+[Flexes] → [ESP32 ADC pins] — I2C — [PCA9685 PWM Driver] → [Servos]
 
 ---
 
@@ -78,13 +79,13 @@ LiPo (+7.4V)
 
 - **Always** have a fuse on your LiPo lines!
 - All modules get a *common ground* (connect all GNDs together!).
-- Double check voltage: servos burn at >7V, Pi dies above 5.5V.
+- Double check voltage: servos burn at >7V, ESP32 GPIO is 3.3V-only, and ESP32 USB/VIN input should stay at 5V.
 - Keep signal wires short; use new Dupont cables and solder for reliability.
-- Only power on Pi and servos once double-checked.
+- Only power on ESP32 and servos once double-checked.
 
 ---
 
 ## **Further Reading**
 
 - [Adafruit PCA9685 Servo Driver Guide](https://learn.adafruit.com/16-channel-pwm-servo-driver)
-- [Arduino Analog Input Tutorial](https://www.arduino.cc/en/Tutorial/BuiltInExamples/AnalogInput)
+- [ESP32 ADC Guide](https://docs.espressif.com/projects/arduino-esp32/en/latest/api/adc.html)
