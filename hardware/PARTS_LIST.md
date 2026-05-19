@@ -5,7 +5,7 @@ For a robust and reliable Dumm-E, here’s the complete Bill of Materials.
 | Part                           | Quantity | Notes/Links                                               |
 |---------------------------------|---------:|-----------------------------------------------------------|
 | **Raspberry Pi 4 Model B**      |      1   | 4GB+ recommended                                          |
-| **Arduino Nano/Uno**            |      1   | For glove reading                                         |
+| **ESP32 DevKit v1**             |      1   | Main glove + servo controller over I2C/PCA9685           |
 | **MG996R Servo Motor**          |      5   | Metal gear, high torque; one per finger                   |
 | **PCA9685 PWM Driver (I2C)**    |      1   | 16-channel servo driver                                   |
 | **ADS1115 ADC Module (I2C)**    |      1   | Needed if using analog sensors with Pi directly*          |
@@ -27,7 +27,7 @@ For a robust and reliable Dumm-E, here’s the complete Bill of Materials.
 | **Velcro Straps**               |      2   | Glove-to-arm/hand fitment                                 |
 | **Hotglue or Superglue**        |    Tube  | Mechanical assembly                                       |
 
-*If using all flex sensors through Arduino, ADS1115 is optional.
+*If using all flex sensors through ESP32 ADC pins, ADS1115 is optional.
 
 **Tip:** Buy extra jumpers, screws, and fishing line for mistakes and spares.
 

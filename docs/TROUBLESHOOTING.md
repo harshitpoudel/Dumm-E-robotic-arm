@@ -18,24 +18,24 @@ Having trouble with your Dumm-E? Here’s how to diagnose and fix common problem
 
 ## Serial Communication Issues
 
-- **Arduino not found?**
-  - Run `ls /dev/ttyACM*` or `ls /dev/ttyUSB*`.
+- **ESP32 not found?**
+  - Run `ls /dev/ttyUSB*` or `ls /dev/ttyACM*`.
   - Check your cable and port.
   - Try lowering baudrate if you have errors.
 
 - **Strange characters or garbled data?**
-  - Make sure both Arduino and Pi use the exact same baudrate (default \= 115200).
-  - USB hub may cause issues. Try plugging Arduino directly into Pi.
+  - Make sure firmware and Serial Monitor use the same baudrate (default \= 115200).
+  - USB hub may cause issues. Try plugging ESP32 directly into your computer.
 
 ---
 
 ## Servo Issues
 
 - **Servos twitch or don’t move?**
-  - Confirm external 6V supply to PCA9685 “V+” (not Pi’s 5V!).
+  - Confirm external 6V supply to PCA9685 “V+” (not ESP32 board 5V!).
   - Check common ground—missing GND will prevent PWM from working.
   - Check for reversed servo connector (brown = GND, red = V+, yellow/orange = PWM).
-  - Use `config.py` SERVO_CHANNELS and SERVO_REVERSE for mapping/fixing rotation.
+  - Use `servoChannels[]` and `servoReverse[]` in the ESP32 sketch for mapping/fixing rotation.
 
 - **Servos buzz but don’t move?**
   - Power supply is too weak—use at least 5A UBEC.
@@ -51,7 +51,7 @@ Having trouble with your Dumm-E? Here’s how to diagnose and fix common problem
   - Double-check 10kΩ resistors to ground.
 
 - **Calibration off / movement imprecise?**
-  - Carefully calibrate `flexMin[]` and `flexMax[]` in Arduino code for YOUR glove.
+  - Carefully calibrate `flexMin[]` and `flexMax[]` in ESP32 code for YOUR glove.
   - Use Serial Monitor to log sensor readings for each flex/bend position.
 
 ---
@@ -61,7 +61,7 @@ Having trouble with your Dumm-E? Here’s how to diagnose and fix common problem
 - **No movement or odd servos?**
   - Recheck all V+ and GND wires.
   - Inspect for shorts or loose wires.
-  - Ensure Pi, PCA9685, Arduino share common ground.
+  - Ensure ESP32, PCA9685, and servo supply share common ground.
 
 ---
 
